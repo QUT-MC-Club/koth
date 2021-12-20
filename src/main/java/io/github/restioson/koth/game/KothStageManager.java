@@ -166,7 +166,7 @@ public class KothStageManager {
         if ((this.startTime - time) % 20 == 0) {
             if (sec > 0) {
                 players.showTitle(new LiteralText(Integer.toString(sec)).formatted(Formatting.BOLD), 20);
-                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP);
             } else {
                 players.showTitle(new LiteralText("Go!").formatted(Formatting.BOLD), 20);
                 players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 2.0F);

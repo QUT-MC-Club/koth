@@ -1,5 +1,5 @@
 plugins {
-  id 'fabric-loom' version '0.8-SNAPSHOT'
+  id 'fabric-loom' version '0.10-SNAPSHOT'
   id 'maven-publish'
 }
 
@@ -10,8 +10,8 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-minecraft {
-  accessWidener = file("src/main/resources/koth.accesswidener")
+loom {
+  accessWidenerPath = file("src/main/resources/koth.accesswidener")
 }
 
 repositories {
@@ -28,9 +28,9 @@ dependencies {
   // Fabric API. This is technically optional, but you probably want it anyway.
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-  modImplementation 'xyz.nucleoid:plasmid:0.5.2+1.17.1'
+  modImplementation "xyz.nucleoid:plasmid:${project.plasmid_version}"
 
-  modRuntime("supercoder79:databreaker:0.2.7") {
+  modRuntime("supercoder79:databreaker:0.2.8") {
     exclude module: "fabric-loader"
   }
 }
