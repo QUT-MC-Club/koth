@@ -1,12 +1,13 @@
 package io.github.restioson.koth.game;
 
 import io.github.restioson.koth.game.map.KothMap;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
@@ -14,13 +15,19 @@ import xyz.nucleoid.map_templates.BlockBounds;
 import xyz.nucleoid.plasmid.game.player.PlayerOffer;
 import xyz.nucleoid.plasmid.game.player.PlayerOfferResult;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 public class KothSpawnLogic {
     private final ServerWorld world;
     private final KothMap map;
+    private final Map<BlockBounds, LongList> spawnPositionsMap;
 
     public KothSpawnLogic(ServerWorld world, KothMap map) {
         this.world = world;
         this.map = map;
+        this.spawnPositionsMap = collectSpawnPositions(world, map);
     }
 
     public PlayerOfferResult acceptPlayer(PlayerOffer offer, GameMode gameMode, @Nullable KothStageManager stageManager) {
@@ -70,24 +77,48 @@ public class KothSpawnLogic {
     }
 
     public Vec3d findSpawnFor(ServerPlayerEntity player, BlockBounds bounds) {
-        var world = this.world;
+        Random random = player.getRandom();
+
+        LongList spawnPositions = this.spawnPositionsMap.get(bounds);
+        long packedPos = spawnPositions.getLong(random.nextInt(spawnPositions.size()));
         BlockPos min = bounds.min();
-        BlockPos max = bounds.max();
 
-        boolean validSpawn = false;
+        int x = BlockPos.unpackLongX(packedPos);
+        int z = BlockPos.unpackLongZ(packedPos);
 
-        double x = 0;
-        double z = 0;
+        return new Vec3d(x + random.nextDouble(), min.getY(), z + random.nextDouble());
+    }
 
-        while (!validSpawn) {
-            x = MathHelper.nextDouble(player.getRandom(), min.getX(), max.getX());
-            z = MathHelper.nextDouble(player.getRandom(), min.getZ(), max.getZ());
+    private static Map<BlockBounds, LongList> collectSpawnPositions(ServerWorld world, KothMap map) {
+        Map<BlockBounds, LongList> spawnPositionsMap = new HashMap<>();
 
-            validSpawn = (!world.getBlockState(new BlockPos(x, min.getY(), z)).isAir()) ||
-                    (!world.getBlockState(new BlockPos(x, min.getY() - 1, z)).isAir()) ||
-                    (!world.getBlockState(new BlockPos(x, min.getY() - 2, z)).isAir());
+        BlockPos.Mutable pos = new BlockPos.Mutable();
+
+        for (BlockBounds spawn : map.spawns) {
+            LongList spawnPositions = new LongArrayList(64);
+            spawnPositionsMap.put(spawn, spawnPositions);
+
+            BlockPos min = spawn.min();
+            BlockPos max = spawn.max();
+
+            for (int x = min.getX(); x < max.getX(); x++) {
+                for (int z = min.getZ(); z < max.getZ(); z++) {
+                    for (int y = min.getY(); y > min.getY() - 3; y--) {
+                        pos.set(x, y, z);
+                        if (!world.getBlockState(pos).isAir()) {
+                            spawnPositions.add(pos.asLong());
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            if (spawnPositions.isEmpty()) {
+                BlockPos centerBottom = new BlockPos(spawn.centerBottom());
+                spawnPositions.add(centerBottom.asLong());
+            }
         }
 
-        return new Vec3d(x, min.getY(), z);
+        return spawnPositionsMap;
     }
 }

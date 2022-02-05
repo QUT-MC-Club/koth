@@ -8,13 +8,14 @@
   "description": "gameType.koth.koth.desc",
   "map": {
     "id": "koth:castle",
-    "spawn_angle": 90,
-    "time": 12300
+    "spawn_angle": 0
   },
+  "deathmatch": true,
   "players": {
     "min": 2,
     "max": 100
   },
-  "time_limit_secs": 170,
-  "has_stick": true
+  "has_stick": true,
+  "first_to": 3,
+  "spawn_invulnerability": false
 }
