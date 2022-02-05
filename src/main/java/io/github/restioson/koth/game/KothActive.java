@@ -154,7 +154,7 @@ public class KothActive {
             this.spawnDeadParticipant(player, source, this.world.getTime());
         }
 
-        if (!this.pvpEnabled || (this.config.spawnInvuln() && this.gameMap.noPvp.contains(player.getBlockPos()))) {
+        if (!this.pvpEnabled || this.hasSpawnInvulnerability(player)) {
             return ActionResult.FAIL;
         }
 
@@ -176,8 +176,10 @@ public class KothActive {
 
     private void onOpen() {
         ServerWorld world = this.world;
+
+        int index = 0;
         for (ServerPlayerEntity player : this.participants.keySet()) {
-            this.spawnParticipant(player);
+            this.spawnParticipant(player, index);
 
             if (this.config.hasStick()) {
                 ItemStack stick = ItemStackBuilder.of(Items.STICK)
@@ -206,6 +208,8 @@ public class KothActive {
                     player.equipStack(EquipmentSlot.OFFHAND, feather);
                 }
             }
+
+            index++;
         }
         this.stageManager.onOpen(world.getTime(), this.config, this.gameSpace);
         this.scoreboard.renderTitle();
@@ -254,7 +258,7 @@ public class KothActive {
             int ticks,
             PersistentProjectileEntity projectile
     ) {
-        if (this.gameMap.spawn.contains(user.getBlockPos()) && this.config.spawnInvuln()) {
+        if (this.hasSpawnInvulnerability(user)) {
             return ActionResult.FAIL;
         } else {
             return ActionResult.PASS;
@@ -262,7 +266,7 @@ public class KothActive {
     }
 
     private void spawnDeadParticipant(ServerPlayerEntity player, DamageSource damageSource, long time) {
-        this.spawnLogic.resetAndRespawn(player, GameMode.SPECTATOR, this.stageManager);
+        this.spawnLogic.resetAndRespawnRandomly(player, GameMode.SPECTATOR, this.stageManager);
 
         Inventories.remove(player.getInventory(), it -> it.getItem() == Items.BOW, 1, false);
         KothPlayer participant = this.participants.get(player);
@@ -303,12 +307,16 @@ public class KothActive {
         }
     }
 
-    private void spawnParticipant(ServerPlayerEntity player) {
+    private void spawnParticipant(ServerPlayerEntity player, int index) {
         if (this.config.hasBow() && !player.getInventory().containsAny(new HashSet<>(Collections.singletonList(Items.BOW)))) {
             this.maybeGiveBow(player);
         }
 
-        this.spawnLogic.resetAndRespawn(player, GameMode.ADVENTURE, this.stageManager);
+        if (index < 0) {
+            this.spawnLogic.resetAndRespawnRandomly(player, GameMode.ADVENTURE, this.stageManager);
+        } else {
+            this.spawnLogic.resetAndRespawn(player, GameMode.ADVENTURE, this.stageManager, index);
+        }
     }
 
     private void tick() {
@@ -363,8 +371,10 @@ public class KothActive {
 
                 break;
             case NEXT_ROUND:
+                int index = 0;
                 for (ServerPlayerEntity participant : this.participants.keySet()) {
-                    this.spawnParticipant(participant);
+                    this.spawnParticipant(participant, index);
+                    index++;
                 }
             case TICK_FINISHED_PLAYERS_FROZEN:
                 this.pvpEnabled = false;
@@ -391,7 +401,7 @@ public class KothActive {
                 boolean justAbove = player.getY() > max.getY() && bounds.contains(playerBoundedY);
 
                 if (player.isSpectator()) {
-                    this.spawnLogic.resetAndRespawn(player, GameMode.SPECTATOR, this.stageManager);
+                    this.spawnLogic.resetAndRespawnRandomly(player, GameMode.SPECTATOR, this.stageManager);
                 } else if (!justAbove) {
                     this.spawnDeadParticipant(player, DamageSource.OUT_OF_WORLD, time);
                 }
@@ -439,8 +449,20 @@ public class KothActive {
         }
 
         if (time - state.deadTime > 5 * 20) {
-            this.spawnParticipant(player);
+            this.spawnParticipant(player, -1);
         }
+    }
+
+    private boolean hasSpawnInvulnerability(ServerPlayerEntity player) {
+        if (this.config.spawnInvuln()) {
+            for (BlockBounds noPvp : this.gameMap.noPvp) {
+                if (noPvp.contains(player.getBlockPos())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private List<KothPlayer> buildLeaderboard() {

@@ -25,15 +25,23 @@ public class KothSpawnLogic {
 
     public PlayerOfferResult acceptPlayer(PlayerOffer offer, GameMode gameMode, @Nullable KothStageManager stageManager) {
         var player = offer.player();
-        return offer.accept(this.world, this.findSpawnFor(player))
+        return offer.accept(this.world, this.findSpawnFor(player, this.map.getSpawn(player.getRandom())))
                 .and(() -> {
                     player.setYaw(this.map.spawnAngle);
                     this.resetPlayer(player, gameMode, stageManager);
                 });
     }
 
-    public void resetAndRespawn(ServerPlayerEntity player, GameMode gameMode, @Nullable KothStageManager stageManager) {
-        Vec3d spawn = this.findSpawnFor(player);
+    public void resetAndRespawn(ServerPlayerEntity player, GameMode gameMode, @Nullable KothStageManager stageManager, int index) {
+        this.resetAndRespawn(player, gameMode, stageManager, this.map.getSpawn(index));
+    }
+
+    public void resetAndRespawnRandomly(ServerPlayerEntity player, GameMode gameMode, @Nullable KothStageManager stageManager) {
+        this.resetAndRespawn(player, gameMode, stageManager, this.map.getSpawn(player.getRandom()));
+    }
+
+    private void resetAndRespawn(ServerPlayerEntity player, GameMode gameMode, @Nullable KothStageManager stageManager, BlockBounds bounds) {
+        Vec3d spawn = this.findSpawnFor(player, bounds);
         player.teleport(this.world, spawn.x, spawn.y, spawn.z, this.map.spawnAngle, 0.0F);
 
         this.resetPlayer(player, gameMode, stageManager);
@@ -61,9 +69,8 @@ public class KothSpawnLogic {
         }
     }
 
-    public Vec3d findSpawnFor(ServerPlayerEntity player) {
+    public Vec3d findSpawnFor(ServerPlayerEntity player, BlockBounds bounds) {
         var world = this.world;
-        BlockBounds bounds = this.map.spawn;
         BlockPos min = bounds.min();
         BlockPos max = bounds.max();
 

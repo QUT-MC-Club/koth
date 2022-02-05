@@ -9,9 +9,12 @@ import xyz.nucleoid.map_templates.BlockBounds;
 import xyz.nucleoid.map_templates.MapTemplate;
 import xyz.nucleoid.map_templates.MapTemplateMetadata;
 import xyz.nucleoid.map_templates.MapTemplateSerializer;
+import xyz.nucleoid.map_templates.TemplateRegion;
 import xyz.nucleoid.plasmid.game.GameOpenException;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class KothMapBuilder {
 
@@ -26,20 +29,33 @@ public class KothMapBuilder {
             MapTemplate template = MapTemplateSerializer.loadFromResource(server, this.config.id());
             MapTemplateMetadata metadata = template.getMetadata();
 
-            BlockBounds spawn = metadata.getFirstRegionBounds("spawn");
-            if (spawn == null) {
-                Koth.LOGGER.error("No spawn is defined on the map! The game will not work.");
-                throw new GameOpenException(new LiteralText("no spawn defined"));
-            }
+            List<BlockBounds> spawns = getSpawns(metadata);
 
             BlockBounds throne = metadata.getFirstRegionBounds("throne");
 
-            KothMap map = new KothMap(template, spawn, throne, this.config.spawnAngle());
+            KothMap map = new KothMap(template, spawns, throne, this.config.spawnAngle());
             template.setBiome(BiomeKeys.PLAINS);
 
             return map;
         } catch (IOException e) {
             throw new GameOpenException(new LiteralText("Failed to load template"), e);
         }
+    }
+
+    private static List<BlockBounds> getSpawns(MapTemplateMetadata metadata) {
+        List<BlockBounds> spawns = metadata.getRegions("spawn").sorted((a, b) -> {
+            return getPriority(b) - getPriority(a);
+        }).map(TemplateRegion::getBounds).collect(Collectors.toUnmodifiableList());
+
+        if (spawns.isEmpty()) {
+            Koth.LOGGER.error("No spawn is defined on the map! The game will not work.");
+            throw new GameOpenException(new LiteralText("no spawn defined"));
+        } else {
+            return spawns;
+        }
+    }
+
+    private static int getPriority(TemplateRegion region) {
+        return region == null || region.getData() == null ? 1 : region.getData().getInt("Priority");
     }
 }

@@ -1,32 +1,48 @@
 package io.github.restioson.koth.game.map;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import xyz.nucleoid.map_templates.BlockBounds;
 import xyz.nucleoid.map_templates.MapTemplate;
 import xyz.nucleoid.plasmid.game.world.generator.TemplateChunkGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class KothMap {
     private final MapTemplate template;
-    public final BlockBounds spawn;
+    public final List<BlockBounds> spawns;
     public final int spawnAngle;
     public final BlockBounds bounds;
-    public final BlockBounds noPvp;
+    public final List<BlockBounds> noPvp;
     public final BlockBounds throne;
 
-    public KothMap(MapTemplate template, BlockBounds spawn, BlockBounds throne, int spawnAngle) {
+    public KothMap(MapTemplate template, List<BlockBounds> spawns, BlockBounds throne, int spawnAngle) {
         this.template = template;
-        this.spawn = spawn;
+        this.spawns = spawns;
         this.spawnAngle = spawnAngle;
         this.bounds = template.getBounds();
         this.throne = throne;
 
-        BlockPos max = this.spawn.max();
-        this.noPvp = BlockBounds.of(this.spawn.min(), new BlockPos(max.getX(), max.getY() + 3, max.getZ()));
+        this.noPvp = new ArrayList<>(spawns.size());
+        for (BlockBounds spawn : spawns) {
+            BlockPos max = spawn.max();
+            this.noPvp.add(BlockBounds.of(spawn.min(), new BlockPos(max.getX(), max.getY() + 3, max.getZ())));
+        }
     }
 
     public ChunkGenerator asGenerator(MinecraftServer server) {
         return new TemplateChunkGenerator(server, this.template);
+    }
+
+    public BlockBounds getSpawn(int index) {
+        return this.spawns.get(index % this.spawns.size());
+    }
+
+    public BlockBounds getSpawn(Random random) {
+        return Util.getRandom(this.spawns, random);
     }
 }
