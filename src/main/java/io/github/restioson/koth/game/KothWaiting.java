@@ -5,7 +5,7 @@ import io.github.restioson.koth.game.map.KothMapBuilder;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.GameMode;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
@@ -43,7 +43,7 @@ public class KothWaiting {
         KothMap map = generator.create(context.server());
 
         if (!config.winnerTakesAll() && map.throne == null) {
-            throw new GameOpenException(new LiteralText("throne must exist if winner doesn't take all"));
+            throw new GameOpenException(Text.literal("throne must exist if winner doesn't take all"));
         }
 
         RuntimeWorldConfig worldConfig = new RuntimeWorldConfig()

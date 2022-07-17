@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.map_templates.BlockBounds;
@@ -17,7 +18,6 @@ import xyz.nucleoid.plasmid.game.player.PlayerOfferResult;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class KothSpawnLogic {
     private final ServerWorld world;

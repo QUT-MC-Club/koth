@@ -1,7 +1,6 @@
 package io.github.restioson.koth.game;
 
 import net.minecraft.entity.boss.BossBar;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
 import xyz.nucleoid.plasmid.game.common.widget.BossBarWidget;
@@ -10,7 +9,7 @@ public final class KothTimerBar {
     private final BossBarWidget bar;
 
     public KothTimerBar(GlobalWidgets widgets) {
-        LiteralText title = new LiteralText("Waiting for the game to start...");
+        Text title = Text.literal("Waiting for the game to start...");
         this.bar = widgets.addBossBar(title, BossBar.Color.GREEN, BossBar.Style.NOTCHED_10);
     }
 
@@ -23,7 +22,7 @@ public final class KothTimerBar {
 
     public void setOvertime() {
         this.bar.setProgress(1.0f);
-        this.bar.setTitle(new LiteralText("Overtime!"));
+        this.bar.setTitle(Text.literal("Overtime!"));
     }
 
     private Text getText(long ticksUntilEnd) {
@@ -33,6 +32,6 @@ public final class KothTimerBar {
         long seconds = secondsUntilEnd % 60;
         String time = String.format("%02d:%02d left", minutes, seconds);
 
-        return new LiteralText(time);
+        return Text.literal(time);
     }
 }

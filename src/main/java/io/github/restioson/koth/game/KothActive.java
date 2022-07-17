@@ -21,7 +21,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -31,8 +30,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.map_templates.BlockBounds;
 import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameSpace;
@@ -167,7 +164,7 @@ public class KothActive {
                     .addEnchantment(Enchantments.PUNCH, 2)
                     .addEnchantment(Enchantments.INFINITY, 1)
                     .setUnbreakable()
-                    .addLore(new LiteralText("Uzoba dutyulwa"))
+                    .addLore(Text.literal("Uzoba dutyulwa"))
                     .build();
 
             player.getInventory().insertStack(bow);
@@ -184,14 +181,14 @@ public class KothActive {
             if (this.config.hasStick()) {
                 ItemStack stick = ItemStackBuilder.of(Items.STICK)
                         .addEnchantment(Enchantments.KNOCKBACK, 2)
-                        .addLore(new LiteralText("Ndiza kumbetha"))
+                        .addLore(Text.literal("Ndiza kumbetha"))
                         .build();
                 player.getInventory().insertStack(stick);
             }
 
             if (this.config.hasBow()) {
                 ItemStack arrow = ItemStackBuilder.of(Items.ARROW)
-                        .addLore(new LiteralText("It seems to always come back to me..."))
+                        .addLore(Text.literal("It seems to always come back to me..."))
                         .build();
 
                 player.getInventory().insertStack(arrow);
@@ -199,7 +196,7 @@ public class KothActive {
 
             if (this.config.hasFeather()) {
                 ItemStack feather = ItemStackBuilder.of(Items.FEATHER)
-                        .addLore(new LiteralText("Bukelani, ndiyinkosi yesibhakabhaka!"))
+                        .addLore(Text.literal("Bukelani, ndiyinkosi yesibhakabhaka!"))
                         .build();
 
                 if (this.config.hasBow()) {
@@ -274,7 +271,7 @@ public class KothActive {
 
         if (this.config.deathmatch()) {
             PlayerSet players = this.gameSpace.getPlayers();
-            MutableText eliminationMessage = new LiteralText(" has been eliminated by ");
+            MutableText eliminationMessage = Text.literal(" has been eliminated by ");
 
             if (damageSource.getAttacker() != null) {
                 eliminationMessage.append(damageSource.getAttacker().getDisplayName());
@@ -285,10 +282,10 @@ public class KothActive {
             } else if (damageSource.isOutOfWorld()) {
                 eliminationMessage.append("staring into the abyss!");
             } else {
-                eliminationMessage = new LiteralText(" has been eliminated!");
+                eliminationMessage = Text.literal(" has been eliminated!");
             }
 
-            players.sendMessage(new LiteralText("").append(player.getDisplayName()).append(eliminationMessage).formatted(Formatting.GOLD));
+            players.sendMessage(Text.literal("").append(player.getDisplayName()).append(eliminationMessage).formatted(Formatting.GOLD));
             players.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
         } else if (this.config.knockoff() && !this.gameFinished) {
             KothPlayer attacker = this.participants.get(participant.attacker(time, world));
@@ -363,7 +360,7 @@ public class KothActive {
             case OVERTIME:
                 if (this.overtimeState == OvertimeState.NOT_IN_OVERTIME) {
                     this.overtimeState = OvertimeState.IN_OVERTIME;
-                    this.gameSpace.getPlayers().showTitle(new LiteralText("Overtime!"), 20);
+                    this.gameSpace.getPlayers().showTitle(Text.literal("Overtime!"), 20);
                     this.timerBar.ifPresent(KothTimerBar::setOvertime);
                 } else if (this.overtimeState == OvertimeState.JUST_ENTERED_OVERTIME) {
                     this.overtimeState = OvertimeState.IN_OVERTIME;
@@ -444,7 +441,7 @@ public class KothActive {
         int sec = 5 - (int) Math.floor((time - state.deadTime) / 20.0f);
 
         if (sec > 0 && (time - state.deadTime) % 20 == 0) {
-            Text text = new LiteralText(String.format("Respawning in %ds", sec)).formatted(Formatting.BOLD);
+            Text text = Text.literal(String.format("Respawning in %ds", sec)).formatted(Formatting.BOLD);
             player.sendMessage(text, true);
         }
 
@@ -495,7 +492,7 @@ public class KothActive {
         }
 
         if (winner == null) {
-            players.sendMessage(new LiteralText("The ").append(wonThe).append(" ended, but nobody won!").formatted(Formatting.GOLD));
+            players.sendMessage(Text.literal("The ").append(wonThe).append(" ended, but nobody won!").formatted(Formatting.GOLD));
             players.playSound(SoundEvents.ENTITY_VILLAGER_NO);
             return;
         }
@@ -509,7 +506,7 @@ public class KothActive {
         }
 
 
-        Text message = winner.getDisplayName().shallowCopy().append(" has won the ").append(wonThe).append("!").formatted(Formatting.GOLD);
+        Text message = winner.getDisplayName().copy().append(" has won the ").append(wonThe).append("!").formatted(Formatting.GOLD);
 
         players.sendMessage(message);
         players.playSound(SoundEvents.ENTITY_VILLAGER_YES);

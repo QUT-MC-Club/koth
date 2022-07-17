@@ -1,6 +1,6 @@
 package io.github.restioson.koth.game;
 
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
 import xyz.nucleoid.plasmid.game.common.widget.SidebarWidget;
@@ -15,7 +15,7 @@ public class KothScoreboard {
 
     public KothScoreboard(GlobalWidgets widgets, String name, boolean wta, boolean dm, boolean ko) {
         this.sidebar = widgets.addSidebar(
-                new LiteralText(name).formatted(Formatting.BLUE, Formatting.BOLD)
+                Text.literal(name).formatted(Formatting.BLUE, Formatting.BOLD)
         );
         this.winnerTakesAll = wta;
         this.deathMatch = dm;
@@ -60,7 +60,7 @@ public class KothScoreboard {
                     );
                 }
 
-                content.add(new LiteralText(line));
+                content.add(Text.literal(line));
             }
         });
     }

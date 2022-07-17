@@ -3,7 +3,7 @@ package io.github.restioson.koth.game.map;
 import io.github.restioson.koth.Koth;
 import io.github.restioson.koth.game.KothConfig;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.world.biome.BiomeKeys;
 import xyz.nucleoid.map_templates.BlockBounds;
 import xyz.nucleoid.map_templates.MapTemplate;
@@ -14,7 +14,6 @@ import xyz.nucleoid.plasmid.game.GameOpenException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class KothMapBuilder {
 
@@ -38,18 +37,18 @@ public class KothMapBuilder {
 
             return map;
         } catch (IOException e) {
-            throw new GameOpenException(new LiteralText("Failed to load template"), e);
+            throw new GameOpenException(Text.literal("Failed to load template"), e);
         }
     }
 
     private static List<BlockBounds> getSpawns(MapTemplateMetadata metadata) {
         List<BlockBounds> spawns = metadata.getRegions("spawn").sorted((a, b) -> {
             return getPriority(b) - getPriority(a);
-        }).map(TemplateRegion::getBounds).collect(Collectors.toUnmodifiableList());
+        }).map(TemplateRegion::getBounds).toList();
 
         if (spawns.isEmpty()) {
             Koth.LOGGER.error("No spawn is defined on the map! The game will not work.");
-            throw new GameOpenException(new LiteralText("no spawn defined"));
+            throw new GameOpenException(Text.literal("no spawn defined"));
         } else {
             return spawns;
         }
