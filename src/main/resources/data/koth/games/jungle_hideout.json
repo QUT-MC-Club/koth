@@ -1,0 +1,21 @@
+{
+  "type": "koth:koth",
+  "icon": {
+    "id": "minecraft:stick", "Count": 1,
+    "Enchantments": [{"id": "minecraft:knockback", "lvl": 1}]
+  },
+  "short_name": "gameType.koth.koth.short",
+  "description": "gameType.koth.koth.desc",
+  "map": {
+    "id": "koth:jungle_hideout",
+    "spawn_angle": 0
+  },
+  "deathmatch": true,
+  "players": {
+    "min": 2,
+    "max": 100
+  },
+  "has_stick": true,
+  "first_to": 3,
+  "spawn_invulnerability": false
+}
