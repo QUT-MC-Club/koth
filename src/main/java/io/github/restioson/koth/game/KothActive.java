@@ -70,6 +70,7 @@ public class KothActive {
     private final Optional<KothTimerBar> timerBar;
     private final KothScoreboard scoreboard;
     private OvertimeState overtimeState = OvertimeState.NOT_IN_OVERTIME;
+    private int totalWins = 0;
     private boolean gameFinished;
     private static final int LEAP_INTERVAL_TICKS = 5 * 20; // 5 second cooldown
     private static final double LEAP_VELOCITY = 1.0;
@@ -478,6 +479,7 @@ public class KothActive {
         if (participant != null) {
             participant.wins++;
         }
+        totalWins++;
 
         String wonThe;
 
@@ -486,6 +488,9 @@ public class KothActive {
             this.gameFinished = true;
         } else if (participant != null && (participant.wins == this.config.firstTo() || this.config.knockoff())) {
             wonThe = "game";
+            if (participant.wins == totalWins) {
+                wonThe += " perfectly";
+            }
             this.gameFinished = true;
         } else {
             wonThe = "round";
