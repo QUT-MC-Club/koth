@@ -114,7 +114,7 @@ public class KothSpawnLogic {
             }
 
             if (spawnPositions.isEmpty()) {
-                BlockPos centerBottom = new BlockPos(spawn.centerBottom());
+                BlockPos centerBottom = BlockPos.ofFloored(spawn.centerBottom());
                 spawnPositions.add(centerBottom.asLong());
             }
         }

@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -17,6 +18,7 @@ import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -148,7 +150,7 @@ public class KothActive {
             participant.lastTimeWasAttacked = new AttackRecord(attacker, time);
         }
 
-        if (!player.isSpectator() && source.isFire()) {
+        if (!player.isSpectator() && source.isIn(DamageTypeTags.IS_FIRE)) {
             this.spawnDeadParticipant(player, source, this.world.getTime());
         }
 
@@ -278,9 +280,9 @@ public class KothActive {
                 eliminationMessage.append(damageSource.getAttacker().getDisplayName());
             } else if (participant != null && participant.attacker(time, world) != null) {
                 eliminationMessage.append(participant.attacker(time, world).getDisplayName());
-            } else if (damageSource.isFire()) {
+            } else if (damageSource.isIn(DamageTypeTags.IS_FIRE)) {
                 eliminationMessage.append("taking a swim in lava!");
-            } else if (damageSource.isOutOfWorld()) {
+            } else if (damageSource.isOf(DamageTypes.OUT_OF_WORLD)) {
                 eliminationMessage.append("staring into the abyss!");
             } else {
                 eliminationMessage = Text.literal(" has been eliminated!");
@@ -401,7 +403,7 @@ public class KothActive {
                 if (player.isSpectator()) {
                     this.spawnLogic.resetAndRespawnRandomly(player, GameMode.SPECTATOR, this.stageManager);
                 } else if (!justAbove) {
-                    this.spawnDeadParticipant(player, DamageSource.OUT_OF_WORLD, time);
+                    this.spawnDeadParticipant(player, this.world.getDamageSources().outOfWorld(), time);
                 }
             }
 
