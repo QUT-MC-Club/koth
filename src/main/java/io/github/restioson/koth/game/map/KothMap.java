@@ -3,6 +3,7 @@ package io.github.restioson.koth.game.map;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import xyz.nucleoid.map_templates.BlockBounds;
@@ -18,14 +19,14 @@ public class KothMap {
     public final int spawnAngle;
     public final BlockBounds bounds;
     public final List<BlockBounds> noPvp;
-    public final BlockBounds throne;
+    public final Box throne;
 
     public KothMap(MapTemplate template, List<BlockBounds> spawns, BlockBounds throne, int spawnAngle) {
         this.template = template;
         this.spawns = spawns;
         this.spawnAngle = spawnAngle;
         this.bounds = template.getBounds();
-        this.throne = throne;
+        this.throne = throne.asBox();
 
         this.noPvp = new ArrayList<>(spawns.size());
         for (BlockBounds spawn : spawns) {

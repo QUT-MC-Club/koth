@@ -338,7 +338,7 @@ public class KothActive {
                 continue;
             }
 
-            boolean onThrone = this.gameMap.throne.asBox().intersects(player.getBoundingBox());
+            boolean onThrone = this.gameMap.throne.intersects(player.getBoundingBox());
 
             if (onThrone) {
                 playersOnThrone += 1;
@@ -388,6 +388,8 @@ public class KothActive {
                 return;
         }
 
+        boolean rebuildLeaderboard = false;
+
         for (ServerPlayerEntity player : this.participants.keySet()) {
             player.setHealth(20.0f);
 
@@ -419,23 +421,31 @@ public class KothActive {
                 continue;
             }
 
+            if (this.config.winnerTakesAll() || this.config.knockoff()) {
+                rebuildLeaderboard = true;
+                continue;
+            }
+
+            if (this.gameMap.throne.intersects(player.getBoundingBox()) && time % 20 == 0) {
+                state.score += 1;
+                player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
+                player.addExperienceLevels(1);
+                rebuildLeaderboard = true;
+            } else if (time % 10 == 0) {
+                // Update flashing indicator
+                rebuildLeaderboard = true;
+            }
+        }
+
+        if (rebuildLeaderboard) {
             if (this.config.winnerTakesAll()) {
                 List<KothPlayer> top = this.participants.values().stream()
                         .sorted(Comparator.comparingDouble(p -> -p.player.getY())) // Descending sort
                         .limit(1)
                         .collect(Collectors.toList());
-                this.scoreboard.render(top);
-                continue;
-            } else if (this.config.knockoff()) {
-                this.scoreboard.render(this.buildLeaderboard());
-                continue;
-            }
-
-            if (this.gameMap.throne.asBox().intersects(player.getBoundingBox()) && time % 20 == 0) {
-                state.score += 1;
-                player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
-                player.addExperienceLevels(1);
-                this.scoreboard.render(this.buildLeaderboard());
+                this.scoreboard.render(top, this.gameMap.throne);
+            } else {
+                this.scoreboard.render(this.buildLeaderboard(), this.gameMap.throne);
             }
         }
     }
@@ -509,7 +519,7 @@ public class KothActive {
                     .sorted(Comparator.comparingDouble(p -> -p.wins)) // Descending sort
                     .limit(5)
                     .collect(Collectors.toList());
-            this.scoreboard.render(top);
+            this.scoreboard.render(top, this.gameMap.throne);
         }
 
 

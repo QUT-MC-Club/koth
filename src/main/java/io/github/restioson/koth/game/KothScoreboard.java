@@ -2,6 +2,7 @@ package io.github.restioson.koth.game;
 
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.Box;
 import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
 import xyz.nucleoid.plasmid.game.common.widget.SidebarWidget;
 
@@ -27,7 +28,7 @@ public class KothScoreboard {
         });
     }
 
-    public void render(List<KothPlayer> leaderboard) {
+    public void render(List<KothPlayer> leaderboard, Box throne) {
         this.sidebar.set(content -> {
             for (KothPlayer entry : leaderboard) {
                 String line;
@@ -45,6 +46,17 @@ public class KothScoreboard {
                 } else if (this.knockoff) {
                     line = String.format(
                             "%s%s%s: %d points",
+                            Formatting.AQUA,
+                            entry.player.getEntityName(),
+                            Formatting.RESET,
+                            entry.score
+                    );
+                } else if (throne.intersects(entry.player.getBoundingBox())) {
+                    Formatting indicatorColor = entry.player.getWorld().getTime() % 20 == 0 ? Formatting.GOLD : Formatting.YELLOW;
+
+                    line = String.format(
+                            "%s♦ %s%s%s: %ds",
+                            indicatorColor,
                             Formatting.AQUA,
                             entry.player.getEntityName(),
                             Formatting.RESET,
