@@ -5,7 +5,9 @@
     "Enchantments": [{"id": "minecraft:knockback", "lvl": 1}]
   },
   "short_name": "gameType.koth.koth.short",
-  "description": "gameType.koth.koth.desc",
+  "description": {
+    "translate": "gameType.koth.koth.desc.deathmatch"
+  },
   "map": {
     "id": "koth:knockback_colosseum",
     "spawn_angle": 0

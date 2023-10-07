@@ -1,7 +1,11 @@
 {
   "gameType.koth.koth": "King of the Hill",
   "gameType.koth.koth.short": "KOTH",
-  "gameType.koth.koth.desc": "In King of the Hill, you must battle other players to stay at the top of the hill!",
+  "gameType.koth.koth.desc.deathmatch": "Be the last player standing!",
+  "gameType.koth.koth.desc.1": "Battle against other players",
+  "gameType.koth.koth.desc.2": "to stay on the throne!",
+  "gameType.koth.koth.desc.knockoff.1": "Score points by knocking other",
+  "gameType.koth.koth.desc.knockoff.2": "players off the map!",
   "game.koth.birthday_cake": "King of the Hill: Birthday Cake",
   "game.koth.birthday_cake.short": "KOTH: Birthday Cake",
   "game.koth.lifebuoy": "King of the Hill: Buoy",

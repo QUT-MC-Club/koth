@@ -5,7 +5,14 @@
     "Enchantments": [{"id": "minecraft:knockback", "lvl": 1}]
   },
   "short_name": "gameType.koth.koth.short",
-  "description": "gameType.koth.koth.desc",
+  "description": [
+    {
+      "translate": "gameType.koth.koth.desc.knockoff.1"
+    },
+    {
+      "translate": "gameType.koth.koth.desc.knockoff.2"
+    }
+  ],
   "map": {
     "id": "koth:ice",
     "spawn_angle": 0
