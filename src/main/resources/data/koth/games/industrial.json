@@ -4,7 +4,9 @@
     "id": "minecraft:stick", "Count": 1,
     "Enchantments": [{"id": "minecraft:knockback", "lvl": 1}]
   },
-  "short_name": "gameType.koth.koth.short",
+  "short_name": {
+    "translate": "game.koth.industrial.short"
+  },
   "description": {
     "translate": "gameType.koth.koth.desc.deathmatch"
   },
