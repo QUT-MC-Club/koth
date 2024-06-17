@@ -1,0 +1,25 @@
+{
+  "type": "koth:koth",
+  "icon": {
+    "id": "minecraft:stick", "Count": 1,
+    "Enchantments": [{"id": "minecraft:knockback", "lvl": 2}]
+  },
+  "short_name": {
+      "translate": "gameType.koth.koth.short"
+  },
+  "description": {
+      "translate": "gameType.koth.koth.desc",
+  },
+  "map": {
+    "id": "koth:space",
+    "spawn_angle": -100,
+    "time": 18000
+  },
+  "dimension": "koth:outer_space",
+  "players": {
+    "min": 2,
+    "max": 100
+  },
+  "time_limit_secs": 170,
+  "has_stick": true
+}

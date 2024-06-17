@@ -79,5 +79,7 @@
   "game.koth.dice": "King of the Hill: Dice",
   "game.koth.dice.short": "KOTH: Dice",
   "game.koth.pyramid": "King of the Hill: Pyramid",
-  "game.koth.pyramid.short": "KOTH: Pyramid"
+  "game.koth.pyramid.short": "KOTH: Pyramid",
+  "game.koth.space": "King of the Hill: Space",
+  "game.koth.space.short": "KOTH: Space"
 }
