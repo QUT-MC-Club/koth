@@ -8,7 +8,7 @@
       "translate": "gameType.koth.koth.short"
   },
   "description": {
-      "translate": "gameType.koth.koth.desc",
+      "translate": "gameType.koth.koth.desc"
   },
   "map": {
     "id": "koth:space",
