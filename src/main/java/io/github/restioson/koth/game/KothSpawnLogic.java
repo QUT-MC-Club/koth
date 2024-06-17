@@ -62,7 +62,7 @@ public class KothSpawnLogic {
 
         player.addStatusEffect(new StatusEffectInstance(
                 StatusEffects.NIGHT_VISION,
-                20 * 60 * 60,
+                -1,
                 1,
                 true,
                 false

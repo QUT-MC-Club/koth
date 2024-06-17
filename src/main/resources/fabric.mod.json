@@ -9,7 +9,6 @@
   ],
   "license": "LGPLv3",
   "environment": "*",
-  "accessWidener": "koth.accesswidener",
   "entrypoints": {
     "main": [
       "io.github.restioson.koth.Koth"

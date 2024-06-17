@@ -49,13 +49,7 @@ import xyz.nucleoid.stimuli.event.player.PlayerDamageEvent;
 import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
 import xyz.nucleoid.stimuli.event.projectile.ArrowFireEvent;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class KothActive {
@@ -212,7 +206,7 @@ public class KothActive {
             index++;
         }
         this.stageManager.onOpen(world.getTime(), this.config, this.gameSpace);
-        this.scoreboard.renderTitle();
+        this.scoreboard.render(this.participants.values().stream().toList(), this.gameMap.throne);
     }
 
     private PlayerOfferResult offerPlayer(PlayerOffer offer) {

@@ -12,14 +12,14 @@
   },
   "map": {
     "id": "koth:romantica",
-    "spawn_angle": 0,
+    "spawn_angle": 0
   },
   "deathmatch": true,	
   "players": {
     "min": 2,
     "max": 100
   },
-  "has_stick": true
+  "has_stick": true,
   "first_to": 3,
   "spawn_invulnerability": false
 }

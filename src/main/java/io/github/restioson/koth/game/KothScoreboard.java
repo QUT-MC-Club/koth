@@ -23,23 +23,18 @@ public class KothScoreboard {
         this.knockoff = ko;
     }
 
-    public void renderTitle() {
-        this.sidebar.set(content -> {
-        });
-    }
-
     public void render(List<KothPlayer> leaderboard, Box throne) {
         this.sidebar.set(content -> {
             for (KothPlayer entry : leaderboard) {
                 String line;
 
                 if (this.winnerTakesAll) {
-                    line = String.format("Ruler: %s%s%s", Formatting.AQUA, entry.player.getEntityName(), Formatting.RESET);
+                    line = String.format("Ruler: %s%s%s", Formatting.AQUA, entry.player.getName(), Formatting.RESET);
                 } else if (this.deathMatch) {
                     line = String.format(
                             "%s%s%s: %d rounds",
                             Formatting.AQUA,
-                            entry.player.getEntityName(),
+                            entry.player.getName(),
                             Formatting.RESET,
                             entry.wins
                     );
@@ -47,7 +42,7 @@ public class KothScoreboard {
                     line = String.format(
                             "%s%s%s: %d points",
                             Formatting.AQUA,
-                            entry.player.getEntityName(),
+                            entry.player.getName(),
                             Formatting.RESET,
                             entry.score
                     );
@@ -58,7 +53,7 @@ public class KothScoreboard {
                             "%s♦ %s%s%s: %ds",
                             indicatorColor,
                             Formatting.AQUA,
-                            entry.player.getEntityName(),
+                            entry.player.getName(),
                             Formatting.RESET,
                             entry.score
                     );
@@ -66,7 +61,7 @@ public class KothScoreboard {
                     line = String.format(
                             "%s%s%s: %ds",
                             Formatting.AQUA,
-                            entry.player.getEntityName(),
+                            entry.player.getName(),
                             Formatting.RESET,
                             entry.score
                     );

@@ -5,10 +5,10 @@
     "Enchantments": [{"id": "minecraft:knockback", "lvl": 2}]
   },
   "short_name": {
-      "translate": "gameType.koth.koth.short"
+    "translate": "game.koth.space.short"
   },
   "description": {
-      "translate": "gameType.koth.koth.desc"
+    "translate": "gameType.koth.koth.desc"
   },
   "map": {
     "id": "koth:space",
