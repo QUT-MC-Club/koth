@@ -2,8 +2,8 @@ package io.github.restioson.koth.game;
 
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.text.Text;
-import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
-import xyz.nucleoid.plasmid.game.common.widget.BossBarWidget;
+import xyz.nucleoid.plasmid.api.game.common.GlobalWidgets;
+import xyz.nucleoid.plasmid.api.game.common.widget.BossBarWidget;
 
 public final class KothTimerBar {
     private final BossBarWidget bar;

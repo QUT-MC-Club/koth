@@ -1,13 +1,14 @@
 package io.github.restioson.koth.game;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.fantasy.Fantasy;
-import xyz.nucleoid.plasmid.game.common.config.PlayerConfig;
+import xyz.nucleoid.plasmid.api.game.common.config.WaitingLobbyConfig;
 
 public record KothConfig(
-        PlayerConfig players,
+        WaitingLobbyConfig players,
         MapConfig map,
         int timeLimitSecs,
         Identifier dimension,
@@ -20,8 +21,8 @@ public record KothConfig(
         boolean spawnInvuln,
         boolean knockoff
 ) {
-    public static final Codec<KothConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            PlayerConfig.CODEC.fieldOf("players").forGetter(KothConfig::players),
+    public static final MapCodec<KothConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            WaitingLobbyConfig.CODEC.fieldOf("players").forGetter(KothConfig::players),
             MapConfig.CODEC.fieldOf("map").forGetter(KothConfig::map),
             Codec.INT.optionalFieldOf("time_limit_secs", 0).forGetter(KothConfig::timeLimitSecs),
             Identifier.CODEC.optionalFieldOf("dimension", Fantasy.DEFAULT_DIM_TYPE.getValue()).forGetter(KothConfig::dimension),

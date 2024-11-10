@@ -1,0 +1,25 @@
+{
+  "type": "koth:koth",
+  "icon": {
+    "id": "minecraft:stick", "Count": 1,
+    "Enchantments": [{"id": "minecraft:knockback", "lvl": 2}]
+  },
+  "short_name": {
+    "translate": "game.koth.dark_hills.short"
+  },
+  "description": {
+    "translate": "gameType.koth.koth.desc.deathmatch"
+  },
+  "map": {
+    "id": "koth:dark_hills",
+    "spawn_angle": 0
+  },
+  "deathmatch": true,
+  "players": {
+    "min": 2,
+    "max": 100
+  },
+  "has_stick": true,
+  "first_to": 3,
+  "spawn_invulnerability": false
+}

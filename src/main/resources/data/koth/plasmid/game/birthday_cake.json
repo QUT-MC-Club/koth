@@ -1,9 +1,6 @@
 {
   "type": "koth:koth",
-  "icon": {
-    "id": "minecraft:stick", "Count": 1,
-    "Enchantments": [{"id": "minecraft:knockback", "lvl": 1}]
-  },
+  "icon": "minecraft:stick",
   "short_name": {
     "translate": "game.koth.birthday_cake.short"
   },

@@ -13,11 +13,12 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.map_templates.BlockBounds;
-import xyz.nucleoid.plasmid.game.player.PlayerOffer;
-import xyz.nucleoid.plasmid.game.player.PlayerOfferResult;
+import xyz.nucleoid.plasmid.api.game.player.JoinAcceptor;
+import xyz.nucleoid.plasmid.api.game.player.JoinAcceptorResult;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class KothSpawnLogic {
     private final ServerWorld world;
@@ -30,10 +31,8 @@ public class KothSpawnLogic {
         this.spawnPositionsMap = collectSpawnPositions(world, map);
     }
 
-    public PlayerOfferResult acceptPlayer(PlayerOffer offer, GameMode gameMode, @Nullable KothStageManager stageManager) {
-        var player = offer.player();
-        return offer.accept(this.world, this.findSpawnFor(player, this.map.getSpawn(player.getRandom())))
-                .and(() -> {
+    public JoinAcceptorResult.Teleport acceptPlayer(JoinAcceptor offer, GameMode gameMode, @Nullable KothStageManager stageManager) {
+        return offer.teleport(this.world, this.findSpawnFor(this.map.getSpawn(world.random))).thenRunForEach(player -> {
                     player.setYaw(this.map.spawnAngle);
                     this.resetPlayer(player, gameMode, stageManager);
                 });
@@ -48,8 +47,8 @@ public class KothSpawnLogic {
     }
 
     private void resetAndRespawn(ServerPlayerEntity player, GameMode gameMode, @Nullable KothStageManager stageManager, BlockBounds bounds) {
-        Vec3d spawn = this.findSpawnFor(player, bounds);
-        player.teleport(this.world, spawn.x, spawn.y, spawn.z, this.map.spawnAngle, 0.0F);
+        Vec3d spawn = this.findSpawnFor(bounds);
+        player.teleport(this.world, spawn.x, spawn.y, spawn.z, Set.of(), this.map.spawnAngle, 0.0F, false);
 
         this.resetPlayer(player, gameMode, stageManager);
     }
@@ -76,8 +75,8 @@ public class KothSpawnLogic {
         }
     }
 
-    public Vec3d findSpawnFor(ServerPlayerEntity player, BlockBounds bounds) {
-        Random random = player.getRandom();
+    public Vec3d findSpawnFor(BlockBounds bounds) {
+        Random random = this.world.getRandom();
 
         LongList spawnPositions = this.spawnPositionsMap.get(bounds);
         long packedPos = spawnPositions.getLong(random.nextInt(spawnPositions.size()));

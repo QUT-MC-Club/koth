@@ -1,6 +1,6 @@
 package io.github.restioson.koth.game;
 
-import xyz.nucleoid.plasmid.util.PlayerRef;
+import xyz.nucleoid.plasmid.api.util.PlayerRef;
 
 public class AttackRecord {
     public static final long EXPIRE_TIME = 20 * 5;

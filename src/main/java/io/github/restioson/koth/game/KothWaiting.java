@@ -5,24 +5,23 @@ import io.github.restioson.koth.game.map.KothMapBuilder;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.world.GameMode;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
-import xyz.nucleoid.plasmid.game.GameOpenContext;
-import xyz.nucleoid.plasmid.game.GameOpenException;
-import xyz.nucleoid.plasmid.game.GameOpenProcedure;
-import xyz.nucleoid.plasmid.game.GameResult;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.common.GameWaitingLobby;
-import xyz.nucleoid.plasmid.game.event.GameActivityEvents;
-import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
-import xyz.nucleoid.plasmid.game.player.PlayerOffer;
-import xyz.nucleoid.plasmid.game.player.PlayerOfferResult;
+import xyz.nucleoid.plasmid.api.game.GameOpenContext;
+import xyz.nucleoid.plasmid.api.game.GameOpenException;
+import xyz.nucleoid.plasmid.api.game.GameOpenProcedure;
+import xyz.nucleoid.plasmid.api.game.GameResult;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.game.common.GameWaitingLobby;
+import xyz.nucleoid.plasmid.api.game.event.GameActivityEvents;
+import xyz.nucleoid.plasmid.api.game.event.GamePlayerEvents;
+import xyz.nucleoid.plasmid.api.game.player.JoinAcceptor;
+import xyz.nucleoid.plasmid.api.game.player.JoinAcceptorResult;
+import xyz.nucleoid.stimuli.event.EventResult;
 import xyz.nucleoid.stimuli.event.player.PlayerDamageEvent;
 import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
 
@@ -61,7 +60,7 @@ public class KothWaiting {
 
             activity.listen(GameActivityEvents.REQUEST_START, waiting::requestStart);
             activity.listen(GameActivityEvents.TICK, waiting::tick);
-            activity.listen(GamePlayerEvents.OFFER, waiting::offerPlayer);
+            activity.listen(GamePlayerEvents.ACCEPT, waiting::acceptPlayer);
             activity.listen(PlayerDamageEvent.EVENT, waiting::onPlayerDamage);
             activity.listen(PlayerDeathEvent.EVENT, waiting::onPlayerDeath);
             worldConfig.setTimeOfDay(config.map().time());
@@ -81,21 +80,21 @@ public class KothWaiting {
         return GameResult.ok();
     }
 
-    private PlayerOfferResult offerPlayer(PlayerOffer offer) {
+    private JoinAcceptorResult acceptPlayer(JoinAcceptor offer) {
         return this.spawnLogic.acceptPlayer(offer, GameMode.ADVENTURE, null);
     }
 
-    private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float value) {
+    private EventResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float value) {
         if (source.isIn(DamageTypeTags.IS_FIRE)) {
             this.spawnPlayer(player);
         }
 
-        return ActionResult.FAIL;
+        return EventResult.DENY;
     }
 
-    private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
+    private EventResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
         this.spawnPlayer(player);
-        return ActionResult.FAIL;
+        return EventResult.DENY;
     }
 
     private void spawnPlayer(ServerPlayerEntity player) {
