@@ -1,6 +1,6 @@
 {
   "type": "koth:koth",
-  "icon": "minecraft:stick",
+  "icon": "minecraft:cod",
   "short_name": {
     "translate": "game.koth.blommor.short"
   },
@@ -22,5 +22,5 @@
     "max": 100
   },
   "time_limit_secs": 170,
-  "has_stick": true
+  "has_fish": true
 }

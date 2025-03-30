@@ -191,12 +191,12 @@ public class KothActive {
     }
 
     private void setupParticipant(ServerPlayerEntity player) {
-        if (this.config.hasStick()) {
-            ItemStack stick = ItemStackBuilder.of(Items.STICK)
+        if (this.config.hasFish()) {
+            ItemStack cod = ItemStackBuilder.of(Items.COD)
                     .addEnchantment(world, Enchantments.KNOCKBACK, 2)
                     .addLore(Text.literal("Ndiza kumbetha"))
                     .build();
-            player.getInventory().insertStack(stick);
+            player.getInventory().insertStack(cod);
         }
 
         if (this.config.hasBow()) {

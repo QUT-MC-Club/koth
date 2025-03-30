@@ -1,7 +1,7 @@
 {
   "type": "koth:koth",
   "icon": {
-    "id": "minecraft:stick", "Count": 1,
+    "id": "minecraft:cod", "Count": 1,
     "Enchantments": [{"id": "minecraft:knockback", "lvl": 2}]
   },
   "short_name": {
@@ -21,5 +21,5 @@
     "max": 100
   },
   "time_limit_secs": 170,
-  "has_stick": true
+  "has_fish": true
 }
