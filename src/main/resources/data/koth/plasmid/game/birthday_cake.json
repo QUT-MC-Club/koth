@@ -1,6 +1,6 @@
 {
   "type": "koth:koth",
-  "icon": "minecraft:stick",
+  "icon": "minecraft:cod",
   "short_name": {
     "translate": "game.koth.birthday_cake.short"
   },
@@ -16,7 +16,7 @@
     "min": 2,
     "max": 100
   },
-  "has_stick": true,
+  "has_fish": true,
   "first_to": 3,
   "spawn_invulnerability": false
 }
