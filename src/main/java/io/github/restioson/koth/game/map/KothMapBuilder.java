@@ -2,6 +2,7 @@ package io.github.restioson.koth.game.map;
 
 import io.github.restioson.koth.Koth;
 import io.github.restioson.koth.game.KothConfig;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.world.biome.BiomeKeys;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class KothMapBuilder {
+
+    private static final int DEFAULT_PRIORITY = 1;
 
     private final KothConfig.MapConfig config;
 
@@ -55,6 +58,11 @@ public class KothMapBuilder {
     }
 
     private static int getPriority(TemplateRegion region) {
-        return region == null || region.getData() == null ? 1 : region.getData().getInt("Priority");
+        if (region == null) return DEFAULT_PRIORITY;
+
+        NbtCompound data = region.getData();
+        if (data == null) return DEFAULT_PRIORITY;
+
+        return data.getInt("Priority", DEFAULT_PRIORITY);
     }
 }
